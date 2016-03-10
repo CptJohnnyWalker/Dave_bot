@@ -2,12 +2,37 @@ import discord
 import asyncio
 import random
 import json
+import cleverbot
+
+cb1 = cleverbot.Cleverbot()
+cb2 = cleverbot.Cleverbot()
+cb3 = cleverbot.Cleverbot()
+cb4 = cleverbot.Cleverbot()
+cb5 = cleverbot.Cleverbot()
 
 client = discord.Client()
 messages_db = []
 
 async def conversation_interface(message):
-    await client.send_message(message.channel, "Yes.")
+    cb = cb5
+    user = str(message.author)
+    if user == "Maurice":
+        cb = cb1
+        print(user)
+    if user == "Captain Johnny Walker":
+        cb = cb2
+        print(user)
+    if user == "Baughb42":
+        cb = cb3
+        print(user)
+    if user == "Bigbidoof":
+        cb = cb4
+        print(user)
+
+    question = str(message.content)[22:]
+    print(question)
+    msg = cb.ask(question)
+    await client.send_message(message.channel, msg)
 
 async def command_interface(message):
     command = str(message.content).split()
@@ -31,17 +56,12 @@ async def command_interface(message):
 
     if command[1] == "dice":
         sidesn = int(command[2])
-        dicen = int(command[3])
-        msg = ''
-        while dicen > 0:
-            randn = sidesn % random.random()
-            msg += "%d " % (randn)
-            dicen -= 1
+        msg = random.randrange(1,sidesn,1)
         await client.send_message(message.channel, msg)
 
     if command[1] == "help":
         await client.send_message(message.channel, "quote name yyyy-mm-dd 24hr:time")
-        await client.send_message(message.channel, "dice sides numDice")
+        await client.send_message(message.channel, "dice sides")
 
 
 
@@ -61,7 +81,7 @@ async def on_message(message):
 
     if message.content.startswith('!command'):
         await command_interface(message)
-    if message.content.startswith('Dave'):
+    if message.content.startswith('<@157179616816136201>'):
         await conversation_interface(message)
 
 
